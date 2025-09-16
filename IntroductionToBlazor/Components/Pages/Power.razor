@@ -1,0 +1,30 @@
+﻿@page "/power"
+@rendermode InteractiveServer
+
+<h3>Возведение  в степень</h3>
+<input type="number" id="baseNumber" @bind="baseNum" @oninput="CalculatePower" />
+<label for="baseNumber" style="font-size:24px;">^</label>
+<input type="number" id="exponent" @bind="exponentNum" @oninput="CalculatePower" />
+<label style="font-size:24px;">= @result</label>
+
+@code {
+    int baseNum = 2;
+    int exponentNum = 3;
+    long result = 8;
+    
+    void CalculatePower()
+    {
+        result = 1;
+         
+        if (exponentNum < 0)
+        {
+            result = 0;
+            return;
+        }
+               
+        for (int i = 0; i < exponentNum; i++)
+        {
+            result *= baseNum;
+        }
+    }
+}
