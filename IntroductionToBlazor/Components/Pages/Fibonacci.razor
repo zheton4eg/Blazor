@@ -1,14 +1,21 @@
 ﻿@page "/fibonacci"
+
 @rendermode InteractiveServer
 
-<h3>Число фибоначи</h3>
-<input type="number" id="fibInput" min="1" max="40" @bind="n" @oninput="CalculateFibonacci" />
+<h3>Fibonacci Series</h3>
+<input type="number" id="fibInput" min="1" max="40" value="@n" @oninput="@OnInputHandler" />
 <label for="fibInput" style="font-size:24px;">numbers: @fibonacciSeries</label>
 
 @code {
-    int n = 5;
-    string fibonacciSeries = "0, 1, 1, 2, 3";
-    
+    int n = 1;
+    string fibonacciSeries = "0";
+
+    void OnInputHandler(ChangeEventArgs e)
+    {
+        n = Convert.ToInt32(e.Value?.ToString());
+        CalculateFibonacci();
+    }
+
     void CalculateFibonacci()
     {
         if (n <= 0)
@@ -22,17 +29,18 @@
             fibonacciSeries = "0";
             return;
         }
+        
         if (n == 2)
         {
             fibonacciSeries = "0, 1";
             return;
         }
-
+        
         long a = 0;
         long b = 1;
         string series = "0, 1";
         
-        for (int i = 2; i < n; i++)
+        for (int i = 3; i <= n; i++)
         {
             long next = a + b;
             series += ", " + next;
