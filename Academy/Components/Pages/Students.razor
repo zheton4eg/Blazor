@@ -1,0 +1,52 @@
+﻿@page "/students"
+@using Academy.Services
+@using Academy.Models
+@inject AcademyService AcademyService
+
+<h3>Список студентов</h3>
+
+students == null
+{
+    <p>Загрузка данных...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Группа</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in students)
+            {
+                <tr>
+                    <td>@student.StudentId</td>
+                    <td>@student.FirstName</td>
+                    <td>@student.LastName</td>
+                    
+                    <td>@(student.GroupId?.ToString() ?? "Не указана")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Student> students=new List<Student>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            students = await AcademyService.GetStudentsAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка загрузки данных: {ex.Message}");
+        }
+    }
+}
