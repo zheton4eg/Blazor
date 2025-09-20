@@ -1,0 +1,99 @@
+﻿@page "/todo"
+@using Microsoft.AspNetCore.Components
+@rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
+
+<PageTitle>TODO</PageTitle>
+
+<h3>TODO</h3>
+<div>Запланировано: @todoTasks.Count</div>
+<div>Выполнено: @doneTasks.Count</div>
+
+<input type="text" placeholder="Новая задача" @bind="newTaskTitle" />
+<button @onclick="AddTask">Добавить</button>
+
+<h4>Список задач (TODO)</h4>
+<ul>
+    @foreach(var task in todoTasks)
+    {
+        <li>
+            <input type="checkbox" @onchange="@(() => MoveToDone(task))" />
+            <span>@task.Title</span>
+        </li>
+    }
+</ul>
+
+<h4>Выполненные задачи (DONE)</h4>
+<ul>
+    @foreach(var task in doneTasks)
+    {
+        <li>
+            <input type="checkbox" checked @onchange="@(() => MoveToTodo(task))" />
+            <span class="complete-task">@task.Title</span>
+        </li>
+    }
+</ul>
+
+@code {
+    private List<TODOitem> todoTasks = new List<TODOitem>();
+    private List<TODOitem> doneTasks = new List<TODOitem>();
+    private string newTaskTitle;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Загрузка сохраненных задач при инициализации
+        await LoadTasks();
+    }
+
+    private void AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(newTaskTitle))
+        {
+            todoTasks.Add(new TODOitem { Title = newTaskTitle });
+            newTaskTitle = string.Empty;
+            SaveTasks();
+        }
+    }
+
+    private async void MoveToDone(TODOitem task)
+    {
+        todoTasks.Remove(task);
+        doneTasks.Add(task);
+        await SaveTasks();
+    }
+
+    private async void MoveToTodo(TODOitem task)
+    {
+        doneTasks.Remove(task);
+        todoTasks.Add(task);
+        await SaveTasks();
+    }
+
+    private async Task SaveTasks()
+    {
+        try
+        {
+            // Сохранение задач в локальное хранилище
+            var todoJson = System.Text.Json.JsonSerializer.Serialize(todoTasks);
+            var doneJson = System.Text.Json.JsonSerializer.Serialize(doneTasks);
+            
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "todoTasks", todoJson);
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "doneTasks", doneJson);
+        }
+        catch
+        {
+            // Обработка ошибок при сохранении
+        }
+    }
+
+    private async Task LoadTasks()
+    {
+       
+            
+
+            
+        
+    }
+
+   
+}
