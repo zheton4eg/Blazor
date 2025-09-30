@@ -37,6 +37,8 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<Schedule> Schedules { get; set; }
 
     public virtual DbSet<Student> Students { get; set; }
+   
+    
 
     public virtual DbSet<Teacher> Teachers { get; set; }
     //Закомментировали чтобы строка подключения бралась из конфигурации
@@ -364,9 +366,9 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(16)
                 .IsFixedLength()
                 .HasColumnName("phone");
-            entity.Property(e => e.Photo)
-                .HasColumnType("image")
-                .HasColumnName("photo");
+            //entity.Property(e => e.Photo)
+            //    .HasColumnType("image")
+            //    .HasColumnName("photo");
 
             entity.HasOne(d => d.GroupNavigation).WithMany(p => p.Students)
                 .HasForeignKey(d => d.GroupId)

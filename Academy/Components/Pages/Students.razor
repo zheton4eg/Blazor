@@ -2,41 +2,64 @@
 @using Academy.Services
 @using Academy.Models
 @inject AcademyService AcademyService
+@inject NavigationManager Navigation
 
-@inject NavigationManager NavigationManager
+<h3>Список студентов</h3>
 
-students == null
-{
-    <p>Загрузка данных...</p>
-}
-else
-{
-    <table class="table">
-        <thead>
+<!-- Кнопка для создания нового студента -->
+<div class="mb-3">
+    <a href="/students/create" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Добавить нового студента
+    </a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Middle Name</th>
+            <th>Birth Date</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Группа</th>
+            <th>Действия</th> 
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in students)
+        {
             <tr>
-                <th>ID</th>
-                <th>Имя</th>
-                <th>Фамилия</th>
-                <th>Группа</th>
+                <td>@student.StudentId</td>
+                <td>@student.FirstName</td>
+                <td>@student.LastName</td>
+                <td>@student.MiddleName</td>
+                <td>@student.BirthDate.ToString("dd.MM.yyyy")</td> 
+                <td>@student.Email</td>
+                <td>@student.Phone</td>
+                <td>@(student.GroupId?.ToString() ?? "Не указана")</td>
+                <td>
+                    <!-- Кнопки действий -->
+                    <div class="btn-group" role="group">
+                        <a href="/students/details/@student.StudentId" class="btn btn-info btn-sm">
+                            <i class="bi bi-eye"></i> Детали
+                        </a>
+                        <a href="/students/edit/@student.StudentId" class="btn btn-warning btn-sm">
+                            <i class="bi bi-pencil"></i> Редактировать
+                        </a>
+                        <a href="/students/delete/@student.StudentId" class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash"></i> Удалить
+                        </a>
+                    </div>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var student in students)
-            {
-                <tr>
-                    <td>@student.StudentId</td>
-                    <td>@student.FirstName</td>
-                    <td>@student.LastName</td>
-                    
-                    <td>@(student.GroupId?.ToString() ?? "Не указана")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+        }
+    </tbody>
+</table>
 
 @code {
-    private List<Student> students=new List<Student>();
+    private List<Student> students = new List<Student>();
 
     protected override async Task OnInitializedAsync()
     {

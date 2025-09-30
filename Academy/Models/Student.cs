@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academy.Models;
 
 public partial class Student
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
     public int StudentId { get; set; }
 
     public string LastName { get; set; } = null!;
@@ -19,7 +24,7 @@ public partial class Student
 
     public string? Phone { get; set; }
 
-    public byte[]? Photo { get; set; }
+    //public byte[]? Photo { get; set; }
 
     public int? GroupId { get; set; }
 

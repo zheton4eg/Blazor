@@ -1,26 +1,19 @@
-﻿using Academy.Components;
-using Academy.Data;
-using Academy.Services;
+﻿using BlazorAcademy.Components;
 using Microsoft.EntityFrameworkCore;
-using Academy.Services;
-
+using Microsoft.Extensions.DependencyInjection;
+using BlazorAcademy.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
-
-// �������� ��� ������ ��� ����������� �������� ���� ������
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContextFactory<BlazorAcademyContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BlazorAcademyContext") ?? throw new InvalidOperationException("Connection string 'BlazorAcademyContext' not found.")));
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// ����������� ������� ��� ������ � ������� ��������
-builder.Services.AddScoped<AcademyService>();
+// Add services to the container.
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 var app = builder.Build();
 
@@ -42,4 +35,3 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
-
